@@ -217,7 +217,7 @@ export default function PurchaseTab({ userId, isAddModalOpen = false, onModalClo
               className="w-full"
             />
           </div>
-          <div className="w-40">
+          {/* <div className="w-40">
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Filter by status" />
@@ -229,7 +229,7 @@ export default function PurchaseTab({ userId, isAddModalOpen = false, onModalClo
                 <SelectItem value="Cancelled">Cancelled</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
         </div>
         {/* <Button
           className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 font-medium text-white transition-all hover:bg-blue-700"
