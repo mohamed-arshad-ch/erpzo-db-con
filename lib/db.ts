@@ -15,10 +15,7 @@ const connectionState = {
 
 
 
-const connectionString =
-  process.env.NEON_POSTGRES_URL || "postgres://neondb_owner:npg_u3OwIMhxX5aQ@ep-plain-bar-a5xm686a-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
-
-  process.env.DATABASE_URL || "postgres://neondb_owner:npg_u3OwIMhxX5aQ@ep-plain-bar-a5xm686a-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
+const connectionString = "postgres://neondb_owner:npg_u3OwIMhxX5aQ@ep-plain-bar-a5xm686a-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
 
 
 
