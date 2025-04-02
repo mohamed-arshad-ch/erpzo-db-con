@@ -12,30 +12,31 @@ const connectionState = {
   connectionAttempts: 0,
 }
 
+// Try to get the database URL from environment variables
+const getDatabaseUrl = () => {
+  // First try the NEON_NEON_DATABASE_URL which is the most reliable one
+ 
 
-
-
-const connectionString = "postgres://neondb_owner:npg_u3OwIMhxX5aQ@ep-plain-bar-a5xm686a-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
-
-
+  return "postgres://neondb_owner:npg_gVSuX0Pi6jyB@ep-icy-tree-a1m05jjz-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+}
 
 // Create a SQL client with error handling
 const createSqlClient = () => {
+  const dbUrl = getDatabaseUrl()
 
-  
-  if (!connectionString) {
+  if (!dbUrl) {
     console.error("No database URL found in environment variables")
     connectionState.isConnected = false
     connectionState.lastError = new Error("Database URL not configured")
     return {
       sql: async () => {
-        throw new Error("Database URL not configured")
+        throw new Error("Database URL not configured. Please check your environment variables.")
       },
     }
   }
 
   try {
-    const sqlFn = neon(connectionString)
+    const sqlFn = neon(dbUrl)
 
     // Create a wrapped version that handles errors
     const wrappedSql = async (...args: Parameters<typeof sqlFn>) => {
@@ -59,6 +60,15 @@ const createSqlClient = () => {
       } catch (error) {
         connectionState.isConnected = false
         connectionState.lastError = error instanceof Error ? error : new Error(String(error))
+
+        // Check for authentication errors specifically
+        const errorMessage = error instanceof Error ? error.message : String(error)
+        if (errorMessage.includes("authentication failed") || errorMessage.includes("password authentication failed")) {
+          console.error("Database authentication error:", errorMessage)
+          throw new Error(
+            "Database authentication failed. Please check your database credentials in the environment variables.",
+          )
+        }
 
         console.error("Database query error:", error)
         throw new Error(`Database query failed: ${error instanceof Error ? error.message : String(error)}`)
@@ -121,6 +131,8 @@ function resetConnectionState() {
   connectionState.connectionAttempts = 0
   connectionState.lastAttempt = 0
 }
+
+
 
 export { sql, isConnected, getLastError, formatDate, resetConnectionState }
 
